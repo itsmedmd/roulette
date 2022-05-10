@@ -1,4 +1,9 @@
+@import "../general/mixins";
+@import "../general/variables";
+
 .url-field {
+    margin-bottom: 36px;
+
     &__label {
         display: inline-block;
         font-size: 20px;
@@ -9,5 +14,11 @@
         width: 100%;
         font-size: 20px;
         padding: 6px 10px;
+    }
+
+    @include respond-to(max-width, $break-phone-medium) {
+        &__input {
+            font-size: 16px;
+        }
     }
 }

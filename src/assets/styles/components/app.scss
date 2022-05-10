@@ -6,4 +6,9 @@
 	min-height: 100vh;
     padding: 48px 10px;
 	width: 100%;
+
+	&__title {
+		margin-bottom: 24px;
+		font-size: 36px;
+	}
 }
