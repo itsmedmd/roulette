@@ -1,0 +1,7 @@
+// mixin for a single media query, for example:
+// respond-to(max-width, 768px) { [styles here] }
+@mixin respond-to($media, $value) {
+	@media screen and ($media: $value) {
+		@content;
+	}
+}

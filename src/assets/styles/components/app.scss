@@ -1,0 +1,9 @@
+@import "../general/variables";
+
+.app {
+    margin: 0 auto;
+	max-width: $page-max-width;
+	min-height: 100vh;
+    padding: 48px 0;
+	width: 100%;
+}
