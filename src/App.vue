@@ -1,7 +1,7 @@
 <template>
     <div class="app">
         <URLInputField v-model:url="inputURL" />
-        <Statistics :url="currentURL "/>
+        <Statistics :url="currentURL" :configuration="configuration" />
     </div>
 </template>
 
@@ -74,7 +74,8 @@ export default {
 
         return {
             inputURL,
-            currentURL
+            currentURL,
+            configuration
         };
     }
 };
