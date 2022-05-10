@@ -1,0 +1,13 @@
+.url-field {
+    &__label {
+        display: inline-block;
+        font-size: 20px;
+        padding-bottom: 6px;
+    }
+
+    &__input {
+        width: 100%;
+        font-size: 20px;
+        padding: 6px 10px;
+    }
+}
