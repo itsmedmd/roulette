@@ -1,7 +1,11 @@
 @import "../general/colors";
+@import "../general/mixins";
+@import "../general/variables";
 
 .statistics {
     margin-bottom: 36px;
+    overflow-x: auto;
+    width: 100%;
 
     &__title {
         font-size: 24px;
@@ -34,6 +38,16 @@
     &__item {
         &:not(:last-of-type) {
             border-right: 1px solid rgba($black, 0.1);
+        }
+    }
+
+    @include respond-to(max-width, $break-phone-medium) {
+        &__title {
+            font-size: 20px;
+        }
+
+        &__table {
+            font-size: 16px;
         }
     }
 }
