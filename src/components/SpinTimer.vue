@@ -1,7 +1,8 @@
 <template>
     <div class="spin-timer">
-        <p v-if="secondsToSpin > 0" class="spin-timer__text">
-            Next spin in {{ secondsToSpin }} seconds
+        <p v-if="secondsToFakeSpin > 0" class="spin-timer__text">
+            Next spin in <b>{{ secondsToFakeSpin }}</b> seconds
+            (wheel {{ $props.wheelID }})
         </p>
         <p v-else class="spin-timer__text">
             The wheel is spinning...
@@ -14,24 +15,30 @@ import { onMounted, onUnmounted, watch, ref } from '@vue/runtime-core';
 export default {
     name: "SpinTimer",
     props: [
-        "startDelta",
-        "fakeStartDelta"
+        "secondsTillSpin",
+        "secondsTillFakeSpin",
+        "wheelID"
     ],
-    setup(props) {
-        const secondsToSpin = ref(props.fakeStartDelta);
+    setup(props, {emit}) {
+        const secondsToFakeSpin = ref(props.secondsTillFakeSpin);
+        const secondsToRealSpin = ref(props.secondsTillSpin);
         let decrementInterval = null;
 
         const startDecrement = () => {
             decrementInterval = setInterval(() => {
-                secondsToSpin.value--;
-                if (secondsToSpin.value === 0) {
+                secondsToFakeSpin.value--;
+                secondsToRealSpin.value--;
+
+                if (secondsToRealSpin.value === 0) {
                     clearInterval(decrementInterval);
+                    emit("gameStarted");
                 }
             }, 1000);
         };
 
-        watch(() => props.fakeStartDelta, () => {
-            secondsToSpin.value = props.fakeStartDelta;
+        watch(() => props.secondsTillFakeSpin, () => {
+            secondsToFakeSpin.value = props.secondsTillFakeSpin;
+            secondsToRealSpin.value = props.secondsTillSpin;
             clearInterval(decrementInterval);
             startDecrement();
         });
@@ -45,7 +52,7 @@ export default {
         });
 
         return {
-            secondsToSpin
+            secondsToFakeSpin
         };
     }
 }

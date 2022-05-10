@@ -1,4 +1,27 @@
+@import "../general/colors";
+@import "../general/mixins";
+@import "../general/variables";
+
 .spin-history {
     flex-grow: 1;
     overflow-x: auto;
+
+    &__title {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    &__table {
+        font-size: 20px;
+    }
+
+    &__fallback-text {
+        font-size: 18px;
+    }
+
+    @include respond-to(max-width, $break-tablet-small) {
+		margin-bottom: 36px;
+        padding-bottom: 2px;
+        border-bottom: 1px solid rgba($black, 0.4);
+    }
 }

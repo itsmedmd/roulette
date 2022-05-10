@@ -13,13 +13,8 @@
     }
 
     &__table {
-        border-collapse: collapse;
+        border-spacing: 1px;
         font-size: 18px;
-    }
-
-    &__row {
-        border-top: 1px solid rgba($black, 0.2);
-        border-bottom: 1px solid rgba($black, 0.2);
     }
 
     &__header {
@@ -27,18 +22,8 @@
         padding: 10px 14px 10px 4px;
     }
 
-    &__item {
-        padding: 8px;
-        width: 35px;
-        text-align: center;
-        margin-right: 1px;
-    }
-
-    &__row--hits &__item,
-    &__item {
-        &:not(:last-of-type) {
-            border-right: 1px solid rgba($black, 0.1);
-        }
+    &__count {
+        border-right: 1px solid rgba($black, 0.08);
     }
 
     @include respond-to(max-width, $break-phone-medium) {
@@ -50,26 +35,6 @@
             font-size: 16px;
         }
     }
-}
-
-
-.block-red,
-.block-black,
-.block-green {
-    color: $white;
-    padding: 8px;
-}
-
-.block-red {
-    background-color: $red;
-}
-
-.block-black {
-    background-color: $black;
-}
-
-.block-green {
-    background-color: $green;
 }
 
 .hot {
