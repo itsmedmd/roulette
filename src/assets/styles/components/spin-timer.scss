@@ -1,0 +1,13 @@
+@import "../general/colors";
+
+.spin-timer {
+    margin-right: 64px;
+    font-size: 22px;
+    padding: 12px 18px;
+    text-align: center;
+    border: 1px solid $black;
+
+    &__text {
+        min-width: 230px;
+    }
+}

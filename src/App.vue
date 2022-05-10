@@ -2,20 +2,32 @@
     <div class="app">
         <h1 class="app__title">Roulette game</h1>
         <URLInputField v-model:url="inputURL" />
+        <div class="app__row">
+            <SpinTimer :startDelta="6" :fakeStartDelta="12" />
+            <SpinHistory />
+        </div>
+        <Board />
         <Statistics :url="currentURL" :configuration="configuration" />
     </div>
 </template>
 
 <script>
 import { ref, reactive, watch, onMounted } from "vue";
+
 import URLInputField from "./components/URLInputField.vue";
 import Statistics from "./components/Statistics.vue";
+import SpinTimer from "./components/SpinTimer.vue";
+import SpinHistory from "./components/SpinHistory.vue";
+import Board from "./components/Board.vue";
 
 export default {
     name: "App",
     components: {
         URLInputField,
-        Statistics
+        Statistics,
+        SpinTimer,
+        SpinHistory,
+        Board
     },
     setup() {
         // default url values
