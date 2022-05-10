@@ -1,5 +1,6 @@
 <template>
     <div class="app">
+        <h1 class="app__title">Roulette game</h1>
         <URLInputField v-model:url="inputURL" />
         <Statistics :url="currentURL" :configuration="configuration" />
     </div>

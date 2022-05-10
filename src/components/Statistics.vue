@@ -1,13 +1,45 @@
 <template>
     <div class="statistics" v-show="$props.configuration.colors.length">
-        <div
-            v-for="(slot, id) in statistics.stats"
-            :key="`${slot.result}-${id}`"
-        >
-            <p :style="{'background-color': $props.configuration.colors[slot.result]}">
-                {{ slot.result }} count: {{ slot.count }}
-            </p>
-        </div>
+        <h2 class="statistics__title">Statistics of last 200 spins:</h2>
+        <table class="statistics__table">
+            <thead class="statistics__row">
+                <tr>
+                    <td></td>
+                    <th class="statistics__header hot" colspan="5">Hot</th>
+                    <th class="statistics__header" :colspan="statistics.stats.length - 10">
+                        Neutral
+                    </th>
+                    <th class="statistics__header cold" colspan="5">Cold</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="statistics__row">
+                    <th class="statistics__header">Slot</th>
+                    <td
+                        v-for="(slot, id) in statistics.stats"
+                        :key="`${slot.result}-${id}-result`"
+                        class="statistics__item"
+                        :class="`block-${$props.configuration.colors[slot.result]}`"
+                    >
+                        {{ slot.result }}
+                    </td>
+                </tr>
+                <tr class="statistics__row statistics__row--hits">
+                    <th class="statistics__header">Hits</th>
+                    <td
+                        v-for="(slot, id) in statistics.stats"
+                        :key="`${slot.result}-${id}-count`"
+                        class="statistics__item"
+                        :class="[
+                            { 'hot': id < 5 },
+                            { 'cold': id >= statistics.stats.length - 5 }
+                        ]"
+                    >
+                        {{ slot.count }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
