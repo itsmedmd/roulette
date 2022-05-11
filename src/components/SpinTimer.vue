@@ -29,9 +29,11 @@ export default {
                 secondsToFakeSpin.value--;
                 secondsToRealSpin.value--;
 
+                if (secondsToFakeSpin.value === 0) {
+                    emit("fakeSpin");
+                }
+
                 if (secondsToRealSpin.value === 0) {
-                    // stop decrementing because there's no need for it anymore
-                    clearInterval(decrementInterval);
                     emit("gameStarted");
                 }
             }, 1000);

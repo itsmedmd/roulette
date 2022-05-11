@@ -17,6 +17,6 @@
     }
 
     @include respond-to(max-width, $break-tablet-small) {
-		margin-right: 0;
+		  margin-right: 0;
     }
 }
