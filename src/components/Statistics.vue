@@ -59,14 +59,16 @@ export default {
         "wheelID",
         "fetchTrigger"
     ],
-    setup(props) {
-        const refetchTimeout = 500; // ms
+    setup(props, {emit}) {
+        const refetchTimeout = 1000; // ms
 
         const statistics = reactive({
             stats: []
         });
 
         const getStatistics = (url) => {
+            emit("log", `${new Date().toISOString()}: GET .../stats?limit=200`);
+
             customFetch({
                 url: url + "/stats?limit=200",
                 onSuccess: (data) => {
@@ -80,9 +82,13 @@ export default {
                 },
                 onError: (err) => {
                     console.error("Statistics fetch failed:", err);
+
                     // refetch
                     if (url === props.url) {
+                        emit("log", `${new Date().toISOString()}: (timeout) GET .../stats?limit=200 in ${refetchTimeout}ms`);
                         setTimeout(() => getStatistics(url), refetchTimeout);
+                    } else {
+                        emit("log", `${new Date().toISOString()}: GET .../stats?limit=200 failed and wheel changed, stopping refetch`);
                     }
                 }
             });

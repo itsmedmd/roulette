@@ -1,0 +1,24 @@
+@import "../general/colors";
+
+.actions-log {
+    margin-bottom: 80px;
+    height: 300px;
+
+    &__title {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    &__list {
+        list-style-type: none;
+        overflow-y: scroll;
+        border: 1px solid rgba($black, 0.4);
+        padding: 8px 2px 8px 10px;
+        height: 100%;
+    }
+
+    &__action {
+        margin-bottom: 2px;
+        white-space: nowrap;
+    }
+}
