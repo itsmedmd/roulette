@@ -30,6 +30,7 @@ export default {
                 secondsToRealSpin.value--;
 
                 if (secondsToRealSpin.value === 0) {
+                    // stop decrementing because there's no need for it anymore
                     clearInterval(decrementInterval);
                     emit("gameStarted");
                 }
@@ -39,6 +40,8 @@ export default {
         watch(() => props.secondsTillFakeSpin, () => {
             secondsToFakeSpin.value = props.secondsTillFakeSpin;
             secondsToRealSpin.value = props.secondsTillSpin;
+
+            // restart interval
             clearInterval(decrementInterval);
             startDecrement();
         });

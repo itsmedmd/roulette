@@ -37,6 +37,8 @@ import SpinTimer from "./components/SpinTimer.vue";
 import SpinHistory from "./components/SpinHistory.vue";
 import Board from "./components/Board.vue";
 
+import customFetch from "./assets/scripts/customFetch";
+
 export default {
     name: "App",
     components: {
@@ -82,94 +84,82 @@ export default {
                     currentWheelID.value = split[1];
                     currentURL.value = inputURL.value;
 
-                    // also update wheel configuration in case it's different
+                    // also update wheel configuration
                     getWheelConfiguration(currentURL.value);
                 }
             }
         });
 
         const getWheelConfiguration = (url) => {
-            fetch(url + "/configuration")
-            .then((res) => {
-                if (res.status === 200) {
-                    return res.json();
-                }
-                throw new Error("Something went wrong.");
-            })
-            .then((data) => {
-                if (!data.colors && !data.results && url === currentURL.value) {
-                    setTimeout(() => getWheelConfiguration(url), refetchTimeout); // refetch
-                } else {
-                    configuration.colors = data.colors;
-                    configuration.results = data.results;
+            customFetch({
+                url: url + "/configuration",
+                onSuccess: (data) => {
+                    if (!data.colors && !data.results) {
+                        throw new Error("No data found");
+                    } else {
+                        configuration.colors = data.colors;
+                        configuration.results = data.results;
 
-                    // get new game data for the new wheel
-                    getNextGame(url);
-                }
-            })
-            .catch((err) => {
-                console.error("Configuration fetch failed:", err);
-                if (url === currentURL.value) {
-                    setTimeout(() => getWheelConfiguration(url), refetchTimeout); // refetch
+                        // get new game data for the new wheel
+                        getNextGame(url);
+                    }
+                },
+                onError: (err) => {
+                    console.error("Configuration fetch failed:", err);
+                    if (url === currentURL.value) {
+                        setTimeout(() => getWheelConfiguration(url), refetchTimeout); // refetch
+                    }
                 }
             });
         };
 
         const getNextGame = (url) => {
-            fetch(url + "/nextGame")
-            .then((res) => {
-                if (res.status === 200) {
-                    return res.json();
-                }
-                throw new Error("Something went wrong.");
-            })
-            .then((data) => {
-                if (!data && url === currentURL.value) {
-                    setTimeout(() => getNextGame(url), refetchTimeout); // refetch
-                } else {
-                    gameData.data = data;
-                    const slice = url.slice("/");
-                    gameData.data.wheelID = slice[slice.length - 1];
-                }
-            })
-            .catch((err) => {
-                console.error("Next game fetch failed:", err);
-                if (url === currentURL.value) {
-                    setTimeout(() => getNextGame(url), refetchTimeout); // refetch
+            customFetch({
+                url: url + "/nextGame",
+                onSuccess: (data) => {
+                    if (!data) {
+                        throw new Error("No data found");
+                    } else {
+                        gameData.data = data;
+                        const slice = url.slice("/");
+                        gameData.data.wheelID = slice[slice.length - 1];
+                    }
+                },
+                onError: (err) => {
+                    console.error("Next game fetch failed:", err);
+                    if (url === currentURL.value) {
+                        setTimeout(() => getNextGame(url), refetchTimeout); // refetch
+                    }
                 }
             });
         };
 
         const getGameResults = (uuid, url) => {
-            fetch(url + "/game/" + uuid)
-            .then((res) => {
-                if (res.status === 200) {
-                    return res.json();
-                }
-                throw new Error("Something went wrong.");
-            })
-            .then((data) => {
-                if (!data.result && uuid === gameData.data.uuid) {
-                    setTimeout(() => getGameResults(uuid, url), refetchTimeout); // refetch
-                } else {
-                    // create an array indexed by wheel id, so that only
-                    // history relevant to the current wheel is displayed
-                    if (!pastResults.numbers[currentWheelID.value]) {
-                        pastResults.numbers[currentWheelID.value] = [];
+            customFetch({
+                url: url + "/game/" + uuid,
+                onSuccess: (data) => {
+                    if (!data.result && !data.outcome) {
+                        throw new Error("No data found");
+                    } else {
+                        // create an array indexed by wheel id, so that only
+                        // history relevant to the current wheel is displayed
+                        if (!pastResults.numbers[currentWheelID.value]) {
+                            pastResults.numbers[currentWheelID.value] = [];
+                        }
+                        pastResults.numbers[currentWheelID.value].push({
+                            id: data.result,
+                            number: data.outcome
+                        });
+                        
+                        statsTrigger.value = !statsTrigger.value; // update statistics
+                        getNextGame(url);
                     }
-                    pastResults.numbers[currentWheelID.value].push({
-                        id: data.result,
-                        number: data.outcome
-                    });
-                    
-                    statsTrigger.value = !statsTrigger.value; // update statistics
-                    getNextGame(url);
-                }
-            })
-            .catch((err) => {
-                console.error("Next game fetch failed:", err);
-                if (uuid === gameData.data.uuid) {
-                    setTimeout(() => getGameResults(uuid, url), refetchTimeout); // refetch
+                },
+                onError: (err) => {
+                    console.error("Next game fetch failed:", err);
+                    if (uuid === gameData.data.uuid) {
+                        setTimeout(() => getGameResults(uuid, url), refetchTimeout); // refetch
+                    }
                 }
             });
         };

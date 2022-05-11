@@ -49,6 +49,7 @@
 <script>
 
 import { onMounted, watch, reactive } from "vue";
+import customFetch from "../assets/scripts/customFetch";
 
 export default {
     name: "StatisticsBlock",
@@ -66,28 +67,24 @@ export default {
         });
 
         const getStatistics = (url) => {
-            fetch(url + "/stats?limit=200")
-            .then((res) => {
-                if (res.status === 200) {
-                    return res.json();
-                }
-                throw new Error("Something went wrong.");
-            })
-            .then((data) => {
-                if (!data && url === props.url) {
-                    setTimeout(() => getStatistics(url), refetchTimeout); // refetch
-                } else {
-                    statistics.stats = data;
-                    statistics.stats.sort((a, b) => b.count - a.count);
-                }
-            })
-            .catch((err) => {
-                console.error("Statistics fetch failed:", err);
-                if (url === props.url) {
-                    setTimeout(() => getStatistics(url), refetchTimeout); // refetch
+            customFetch({
+                url: url + "/stats?limit=200",
+                onSuccess: (data) => {
+                    if (!data) {
+                        throw new Error("No data found");
+                    } else {
+                        statistics.stats = data;
+                        statistics.stats.sort((a, b) => b.count - a.count);
+                    }
+                },
+                onError: (err) => {
+                    console.error("Statistics fetch failed:", err);
+                    if (url === props.url) {
+                        setTimeout(() => getStatistics(url), refetchTimeout); // refetch
+                    }
                 }
             });
-        };
+        }
 
         watch([() => props.url, () => props.fetchTrigger], () => {
             getStatistics(props.url);
