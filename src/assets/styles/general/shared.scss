@@ -1,0 +1,27 @@
+// styles that are shared across multiple components
+
+.number-block {
+    padding: 8px;
+    width: 35px;
+    text-align: center;
+    margin-right: 1px;
+}
+
+.block-red,
+.block-black,
+.block-green {
+    color: $white;
+    padding: 8px;
+}
+
+.block-red {
+    background-color: $red;
+}
+
+.block-black {
+    background-color: $black;
+}
+
+.block-green {
+    background-color: $green;
+}

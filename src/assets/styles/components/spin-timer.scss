@@ -1,0 +1,22 @@
+@import "../general/colors";
+@import "../general/mixins";
+@import "../general/variables";
+
+.spin-timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-right: 36px;
+    font-size: 24px;
+    padding: 8px 6px;
+    border: 1px solid $black;
+
+    &__text {
+        width: 300px;
+    }
+
+    @include respond-to(max-width, $break-tablet-small) {
+		margin-right: 0;
+    }
+}
