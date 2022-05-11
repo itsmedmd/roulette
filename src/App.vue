@@ -10,6 +10,7 @@
                 :wheelID="gameData.data.wheelID"
                 :secondsTillSpin="gameData.data.startDelta"
                 :secondsTillFakeSpin="gameData.data.fakeStartDelta"
+                :newGameTrigger="newGameTrigger"
                 @fakeSpin="handleFakeSpin"
                 @gameStarted="handleGameStart"
             />
@@ -77,6 +78,7 @@ export default {
         const pastResults = reactive({ numbers: [] });
         const winningNumber = ref(-1);
         const statsTrigger = ref(true);
+        const newGameTrigger = ref(true);
 
         // configuration
         const configuration = reactive({
@@ -149,11 +151,13 @@ export default {
                         throw new Error("No data found");
                     } else {
                         actionsLog.log.push(`${new Date().toISOString()}: fake wheel spin will start in ${data.fakeStartDelta}s`);
-
                         gameData.data = data;
                         // the last element of slice should always be wheelID
                         const slice = url.slice("/");
                         gameData.data.wheelID = slice[slice.length - 1];
+
+                        // trigger timer to reset
+                        newGameTrigger.value = !newGameTrigger.value;
                     }
                 },
                 onError: (err) => {
@@ -241,6 +245,7 @@ export default {
             handleFakeSpin,
             pastResults,
             statsTrigger,
+            newGameTrigger,
             actionsLog,
             addActionLogMessage,
         };
