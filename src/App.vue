@@ -106,8 +106,9 @@ export default {
                 },
                 onError: (err) => {
                     console.error("Configuration fetch failed:", err);
+                    // refetch
                     if (url === currentURL.value) {
-                        setTimeout(() => getWheelConfiguration(url), refetchTimeout); // refetch
+                        setTimeout(() => getWheelConfiguration(url), refetchTimeout);
                     }
                 }
             });
@@ -121,14 +122,16 @@ export default {
                         throw new Error("No data found");
                     } else {
                         gameData.data = data;
+                        // the last element of slice should always be wheelID
                         const slice = url.slice("/");
                         gameData.data.wheelID = slice[slice.length - 1];
                     }
                 },
                 onError: (err) => {
                     console.error("Next game fetch failed:", err);
+                    // refetch
                     if (url === currentURL.value) {
-                        setTimeout(() => getNextGame(url), refetchTimeout); // refetch
+                        setTimeout(() => getNextGame(url), refetchTimeout);
                     }
                 }
             });
@@ -146,19 +149,22 @@ export default {
                         if (!pastResults.numbers[currentWheelID.value]) {
                             pastResults.numbers[currentWheelID.value] = [];
                         }
+
                         pastResults.numbers[currentWheelID.value].push({
                             id: data.result,
                             number: data.outcome
                         });
                         
-                        statsTrigger.value = !statsTrigger.value; // update statistics
+                        // update statistics and get next game
+                        statsTrigger.value = !statsTrigger.value;
                         getNextGame(url);
                     }
                 },
                 onError: (err) => {
                     console.error("Next game fetch failed:", err);
+                    // refetch
                     if (uuid === gameData.data.uuid) {
-                        setTimeout(() => getGameResults(uuid, url), refetchTimeout); // refetch
+                        setTimeout(() => getGameResults(uuid, url), refetchTimeout);
                     }
                 }
             });

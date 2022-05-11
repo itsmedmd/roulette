@@ -74,18 +74,22 @@ export default {
                         throw new Error("No data found");
                     } else {
                         statistics.stats = data;
+                        // sort stats by slot appearance count in descending order
                         statistics.stats.sort((a, b) => b.count - a.count);
                     }
                 },
                 onError: (err) => {
                     console.error("Statistics fetch failed:", err);
+                    // refetch
                     if (url === props.url) {
-                        setTimeout(() => getStatistics(url), refetchTimeout); // refetch
+                        setTimeout(() => getStatistics(url), refetchTimeout);
                     }
                 }
             });
         }
 
+        // `props.fetchTrigger` is manually triggered from App.vue
+        // in order to update statistics when the current game ends 
         watch([() => props.url, () => props.fetchTrigger], () => {
             getStatistics(props.url);
         });
