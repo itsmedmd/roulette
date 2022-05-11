@@ -26,6 +26,7 @@
             v-if="gameData.data"
             :configuration="configuration"
             :wheelID="gameData.data.wheelID"
+            @log="addActionLogMessage"
         />
         <Statistics
             v-if="gameData.data"

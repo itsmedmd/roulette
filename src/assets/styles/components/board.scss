@@ -1,5 +1,58 @@
+@import "../general/colors";
+
 .board {
-    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    background-color: $table-color;
+    border: 2px solid rgba($black, 0.2);
     margin-bottom: 64px;
-    height: 300px;
+    height: 250px;
+    font-size: 40px;
+    padding: 8px;
+
+    &__table-container {
+        display: inline-flex;
+        padding: 4px;
+        border: 1px solid rgba($white, 0.4);
+        background-color: rgba($white, 0.07);
+    }
+
+    &__table {
+        display: grid;
+        grid-template-rows: repeat(3, 64px);
+    }
+
+    &__number {
+        display: inline-block;
+        width: 64px;
+        margin: 1px;
+        border-radius: 5px;
+        user-select: none;
+        cursor: pointer;
+
+        &:hover {
+            transform: scale(1.03);
+        }
+
+        &:active {
+            transform: scale(1);
+        }
+    }
+
+    &__zeroes-container {
+        display: flex;
+        margin-right: 2px;
+        flex-direction: column-reverse;
+    }
+
+    &__zero {
+        height: 100%;
+    }
+
+    &__zero-text {
+        display: inline-flex;
+        align-items: center;
+        color: $white;
+        height: 100%;
+    }
 }
