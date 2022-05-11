@@ -1,4 +1,5 @@
 @import "../general/colors";
+@import "../general/animations";
 
 .board {
     display: flex;
@@ -9,6 +10,7 @@
     height: 250px;
     font-size: 40px;
     padding: 8px;
+    border-radius: 10px;
 
     &__table-container {
         display: inline-flex;
@@ -37,6 +39,11 @@
         &:active {
             transform: scale(1);
         }
+    }
+
+    &__number--winning {
+        transition: background-color 0.5s;
+        animation: winning-number 5s ease-in-out;
     }
 
     &__zeroes-container {

@@ -23,7 +23,10 @@
                         v-for="i in board.numbers.length / 3"
                         :key="`board-num-${i * rowNum}`"
                         class="number-block board__number"
-                        :class="`block-${board.numbers[rowNum + ((i - 1) * 3) - 1].color}`"
+                        :class="[
+                            `block-${board.numbers[rowNum + ((i - 1) * 3) - 1].color}`,
+                            { 'board__number--winning': board.numbers[rowNum + ((i - 1) * 3) - 1].number === $props.winningNumber }
+                        ]"
                     >
                         {{ board.numbers[rowNum + ((i - 1) * 3) - 1].number }}
                     </div>
@@ -41,7 +44,8 @@ export default {
     name: "RouletteBoard",
     props: [
         "configuration",
-        "wheelID"
+        "wheelID",
+        "winningNumber"
     ],
     components: {
         Wheel

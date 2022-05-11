@@ -5,9 +5,8 @@
 
         <ActionsLog :log="actionsLog.log" />
 
-        <div class="app__stats-row">
+        <div class="app__stats-row" v-if="gameData.data">
             <SpinTimer
-                v-if="gameData.data"
                 :wheelID="gameData.data.wheelID"
                 :secondsTillSpin="gameData.data.startDelta"
                 :secondsTillFakeSpin="gameData.data.fakeStartDelta"
@@ -15,7 +14,6 @@
                 @gameStarted="handleGameStart"
             />
             <SpinHistory
-                v-if="gameData.data"
                 :wheelID="gameData.data.wheelID"
                 :configuration="configuration"
                 :history="pastResults.numbers[currentWheelID]"
@@ -26,6 +24,7 @@
             v-if="gameData.data"
             :configuration="configuration"
             :wheelID="gameData.data.wheelID"
+            :winningNumber="winningNumber"
             @log="addActionLogMessage"
         />
         <Statistics
@@ -76,6 +75,7 @@ export default {
         // current and previous game data
         const gameData = reactive({ data: null });
         const pastResults = reactive({ numbers: [] });
+        const winningNumber = ref(-1);
         const statsTrigger = ref(true);
 
         // configuration
@@ -181,6 +181,8 @@ export default {
                     } else {
                         actionsLog.log.push(`${new Date().toISOString()}: game outcome is ${data.outcome}`);
 
+                        winningNumber.value = data.outcome;
+
                         // create an array indexed by wheel id, so that only
                         // history relevant to the current wheel is displayed
                         if (!pastResults.numbers[currentWheelID.value]) {
@@ -234,6 +236,7 @@ export default {
             currentWheelID,
             configuration,
             gameData,
+            winningNumber,
             handleGameStart,
             handleFakeSpin,
             pastResults,
