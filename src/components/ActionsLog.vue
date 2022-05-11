@@ -1,7 +1,7 @@
 <template>
     <div class="actions-log">
         <h3 class="actions-log__title">Actions log</h3>
-        <ul class="actions-log__list" v-if="$props.log.length">
+        <ul ref="list" class="actions-log__list" v-if="$props.log.length">
             <li
                 v-for="(action, id) in $props.log"
                 :key="`${action}-${id}`"
@@ -15,9 +15,24 @@
 </template>
 
 <script>
+import { ref, onUpdated } from "vue";
+
 export default {
     name: "ActionsLog",
-    props: [ "log" ]
+    props: [ "log" ],
+    setup() {
+        const list = ref(null);
+
+        onUpdated(() => {
+            if (list.value) {
+                list.value.scrollTop = list.value.scrollHeight;
+            }
+        });
+
+        return {
+            list
+        };
+    }
 }
 </script>
 
