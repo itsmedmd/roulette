@@ -17,7 +17,8 @@ export default {
     props: [
         "secondsTillSpin",
         "secondsTillFakeSpin",
-        "wheelID"
+        "wheelID",
+        "newGameTrigger"
     ],
     setup(props, {emit}) {
         const secondsToFakeSpin = ref(props.secondsTillFakeSpin);
@@ -39,7 +40,7 @@ export default {
             }, 1000);
         };
 
-        watch(() => props.secondsTillFakeSpin, () => {
+        watch(() => props.newGameTrigger, () => {
             secondsToFakeSpin.value = props.secondsTillFakeSpin;
             secondsToRealSpin.value = props.secondsTillSpin;
 

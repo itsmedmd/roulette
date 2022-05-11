@@ -1,0 +1,27 @@
+@import "./colors";
+
+@keyframes winning-number {
+    0% {
+        background-color: $step1;
+    }
+
+    20% {
+        background-color: $step2;
+    }
+
+    40% {
+        background-color: $step3;
+    }
+
+    60% {
+        background-color: $step4;
+    }
+
+    80% {
+        background-color: $step5;
+    }
+
+    100% {
+        background-color: $step6;
+    }
+}

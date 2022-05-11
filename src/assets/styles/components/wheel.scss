@@ -1,0 +1,9 @@
+@import "../general/colors";
+
+.wheel {
+    background-color: $green;
+    border: 2px solid rgba($black, 0.5);
+    flex-grow: 1;
+    height: 100%;
+    margin-right: 64px;
+}

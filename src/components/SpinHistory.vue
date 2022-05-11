@@ -32,10 +32,11 @@ export default {
         "history",
     ],
     setup(props) {
+        // sort history by date so that the first item is the most recent
         const reversedHistory = computed(() => {
             if (props.history) {
                 const tempHistory = props.history;
-                tempHistory.reverse();
+                tempHistory.sort((a, b) => b.date - a.date);
                 return tempHistory;
             }
             return [];
