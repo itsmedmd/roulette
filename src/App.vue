@@ -22,7 +22,11 @@
             />
         </div>
 
-        <Board />
+        <Board
+            v-if="gameData.data"
+            :configuration="configuration"
+            :wheelID="gameData.data.wheelID"
+        />
         <Statistics
             v-if="gameData.data"
             :wheelID="gameData.data.wheelID"
@@ -76,7 +80,8 @@ export default {
         // configuration
         const configuration = reactive({
             colors: [],
-            results: []
+            results: [],
+            positionToId: []
         });
 
         const actionsLog = reactive({
@@ -108,11 +113,12 @@ export default {
             customFetch({
                 url: url + "/configuration",
                 onSuccess: (data) => {
-                    if (!data.colors && !data.results) {
+                    if (!data.colors && !data.results && !data.positionToId) {
                         throw new Error("No data found");
                     } else {
                         configuration.colors = data.colors;
                         configuration.results = data.results;
+                        configuration.positionToId = data.positionToId;
 
                         // get new game data for the new wheel
                         getNextGame(url);
@@ -182,7 +188,8 @@ export default {
 
                         pastResults.numbers[currentWheelID.value].push({
                             id: data.result,
-                            number: data.outcome
+                            number: data.outcome,
+                            date: new Date()
                         });
                         
                         // update statistics and get next game
