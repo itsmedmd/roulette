@@ -25,7 +25,10 @@
                         class="number-block board__number"
                         :class="[
                             `block-${board.numbers[rowNum + ((i - 1) * 3) - 1].color}`,
-                            { 'board__number--winning': board.numbers[rowNum + ((i - 1) * 3) - 1].number === $props.winningNumber }
+                            {
+                                'board__number--winning':
+                                board.numbers[rowNum + ((i - 1) * 3) - 1].number === $props.winningNumber
+                            }
                         ]"
                     >
                         {{ board.numbers[rowNum + ((i - 1) * 3) - 1].number }}

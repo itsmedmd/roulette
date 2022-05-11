@@ -17,7 +17,7 @@
             <SpinHistory
                 :wheelID="gameData.data.wheelID"
                 :configuration="configuration"
-                :history="pastResults.numbers[currentWheelID]"
+                :history="pastResults.numbers[gameData.data.wheelID]"
             />
         </div>
 
@@ -68,7 +68,6 @@ export default {
         const baseURL = "https://dev-games-backend.advbet.com/v1/ab-roulette/";
         const baseID = 1;
         const currentURL = ref(baseURL + baseID);
-        const currentWheelID = ref(baseID);
 
         // input url is a separate variable for validation
         const inputURL = ref(baseURL + baseID);
@@ -76,9 +75,9 @@ export default {
         // current and previous game data
         const gameData = reactive({ data: null });
         const pastResults = reactive({ numbers: [] });
-        const winningNumber = ref(-1);
         const statsTrigger = ref(true);
         const newGameTrigger = ref(true);
+        const winningNumber = ref(-1);
 
         // configuration
         const configuration = reactive({
@@ -101,7 +100,6 @@ export default {
                 // if split[1] exists, is a number and the new URL is not the same
                 // as the last one, update `currentURL`
                 if (split[1] && !isNaN(split[1]) && inputURL.value !== currentURL.value) {
-                    currentWheelID.value = split[1];
                     currentURL.value = inputURL.value;
 
                     // also update wheel configuration
@@ -122,6 +120,9 @@ export default {
                         configuration.colors = data.colors;
                         configuration.results = data.results;
                         configuration.positionToId = data.positionToId;
+
+                        // reset winning number
+                        winningNumber.value = -1;
 
                         // get new game data for the new wheel
                         getNextGame(url);
@@ -152,7 +153,8 @@ export default {
                     } else {
                         actionsLog.log.push(`${new Date().toISOString()}: fake wheel spin will start in ${data.fakeStartDelta}s`);
                         gameData.data = data;
-                        // the last element of slice should always be wheelID
+
+                        // update current game wheelID
                         const slice = url.slice("/");
                         gameData.data.wheelID = slice[slice.length - 1];
 
@@ -185,15 +187,16 @@ export default {
                     } else {
                         actionsLog.log.push(`${new Date().toISOString()}: game outcome is ${data.outcome}`);
 
+                        // set winning number information
                         winningNumber.value = data.outcome;
 
                         // create an array indexed by wheel id, so that only
                         // history relevant to the current wheel is displayed
-                        if (!pastResults.numbers[currentWheelID.value]) {
-                            pastResults.numbers[currentWheelID.value] = [];
+                        if (!pastResults.numbers[gameData.data.wheelID]) {
+                            pastResults.numbers[gameData.data.wheelID] = [];
                         }
 
-                        pastResults.numbers[currentWheelID.value].push({
+                        pastResults.numbers[gameData.data.wheelID].push({
                             id: data.result,
                             number: data.outcome,
                             date: new Date()
@@ -237,7 +240,6 @@ export default {
         return {
             inputURL,
             currentURL,
-            currentWheelID,
             configuration,
             gameData,
             winningNumber,
