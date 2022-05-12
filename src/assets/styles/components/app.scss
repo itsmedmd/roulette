@@ -1,3 +1,4 @@
+@import "../general/colors";
 @import "../general/variables";
 @import "../general/mixins";
 
@@ -18,6 +19,20 @@
 		display: flex;
 		margin-bottom: 24px;
 		min-height: 80px;
+	}
+
+	// wheel and board
+	&__game-board {
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		background-color: $table-color;
+		border: 2px solid rgba($black, 0.2);
+		margin-bottom: 64px;
+		height: 440px;
+		font-size: 40px;
+		padding: 8px;
+		border-radius: 10px;
 	}
 
 	@include respond-to(max-width, $break-tablet-small) {

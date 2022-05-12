@@ -2,16 +2,6 @@
 @import "../general/animations";
 
 .board {
-    display: flex;
-    align-items: center;
-    background-color: $table-color;
-    border: 2px solid rgba($black, 0.2);
-    margin-bottom: 64px;
-    height: 250px;
-    font-size: 40px;
-    padding: 8px;
-    border-radius: 10px;
-
     &__table-container {
         display: inline-flex;
         padding: 4px;
