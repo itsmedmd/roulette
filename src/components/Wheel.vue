@@ -3,9 +3,9 @@
         <canvas id="wheelCanvas" class="wheel" height="400" width="400">
             Canvas is not supported, please try a different browser.
         </canvas>
-        <div class="wheel__backgound"></div>
-        <div class="wheel__backgound-center"></div>
-        <div class="wheel__backgound-center-point"></div>
+        <div class="wheel__background"></div>
+        <div class="wheel__background-center"></div>
+        <div class="wheel__background-center-point"></div>
     </div>
 </template>
 
@@ -72,11 +72,10 @@ export default {
             // http://dougtesting.net/home
             currentWheel.wheel = new Winwheel({
                 'canvasId'        : 'wheelCanvas',
-                'responsive'      : true,
                 'textFillStyle'   : 'white', // text color
                 'outerRadius'     : 200, // outer circle (with numbers)
                 'innerRadius'     : 95, // inner circle (empty)
-                'textFontSize'    : 17,
+                'textFontSize'    : 18,
                 'textOrientation' : 'curved',
                 'textAlignment'   : 'outer', // on the outer edge of the wheel
                 'numSegments'     : elementsCount,

@@ -1,5 +1,7 @@
 @import "../general/colors";
 @import "../general/animations";
+@import "../general/mixins";
+@import "../general/variables";
 
 .board {
     &__table-container {
@@ -17,6 +19,7 @@
     &__number {
         display: inline-block;
         width: 64px;
+		font-size: 40px;
         margin: 1px;
         border-radius: 5px;
         user-select: none;
@@ -52,5 +55,57 @@
         align-items: center;
         color: $white;
         height: 100%;
+    }
+
+    @include respond-to(max-width, $break-board-medium) {
+        &__table {
+            grid-template-rows: repeat(3, 53px);
+        }
+    
+        &__number {
+            width: 53px;
+		    font-size: 30px;
+        }
+    }
+
+    @include respond-to(max-width, $break-tablet-small) {
+        &__table {
+            grid-template-rows: repeat(3, 40px);
+        }
+    
+        &__number {
+            width: 40px;
+		    font-size: 20px;
+        }
+    }
+
+    @include respond-to(max-width, $break-board-vertical) {
+        &__table-container {
+            flex-direction: column;
+        }
+
+        &__table {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        &__table-row {
+            display: flex;
+            flex-direction: column;
+        }
+
+        &__zeroes-container {
+            flex-direction: row;
+            margin-right: 0;
+        }
+
+        &__zero {
+            flex-grow: 1;
+        }
+    
+        &__number {
+            width: 64px;
+		    font-size: 40px;
+        }
     }
 }

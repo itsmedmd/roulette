@@ -30,9 +30,18 @@
 		border: 2px solid rgba($black, 0.2);
 		margin-bottom: 64px;
 		height: 440px;
-		font-size: 40px;
-		padding: 8px;
+		padding: 12px 8px;
 		border-radius: 10px;
+
+		@include respond-to(max-width, $break-laptop) {
+			flex-direction: column;
+			height: auto;
+			padding: 24px 8px;
+		}
+
+		@include respond-to(max-width, $break-phone-medium) {
+			padding: 24px 2px;
+		}
 	}
 
 	@include respond-to(max-width, $break-tablet-small) {
