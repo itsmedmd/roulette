@@ -24,15 +24,27 @@ export default {
     setup(props) {
         const currentWheel = reactive({ wheel: null });
         const isSpinning = ref(false);
+        const animationTimeouts = reactive({ timeouts: [] });
 
+        // general block colors
         const colors = {
             red: "#d9534f",
             green: "#449d44",
             black: "#000",
         };
 
+        // colors for winning number animation
+        const winAnimationColors = [
+            "deeppink",
+            "chartreuse",
+            "turquoise",
+            "yellow",
+            "navy"
+        ];
+
         const startSpin = () => {
             // don't start a new spin if the wheel is already spinning
+            // (never really happens but still a useful protection just in case)
             if (!isSpinning.value) {
                 currentWheel.wheel.startAnimation();
                 isSpinning.value = true;
@@ -57,7 +69,7 @@ export default {
             });
 
             // documentation can be found here:
-            // https://github.com/zarocknz/javascript-winwheel/blob/master/Winwheel.js
+            // http://dougtesting.net/home
             currentWheel.wheel = new Winwheel({
                 'canvasId'        : 'wheelCanvas',
                 'responsive'      : true,
@@ -85,6 +97,14 @@ export default {
         });
 
         watch(() => props.wheelID, () => {
+            // clear winning number animation in case the user
+            // changed the wheel during the animation
+            animationTimeouts.timeouts.forEach((id) => {
+                clearTimeout(id);
+            });
+            animationTimeouts.timeouts = [];
+
+            // draw new wheel
             drawWheel();
         });
 
@@ -95,6 +115,54 @@ export default {
             // a trigger for wheel spin start was fired
             if (props.isSpinning) {
                 startSpin();
+            }
+        });
+
+        watch(() => props.winningNumber, () => {
+            // if a new winning number is observed,
+            // show an animation for that number
+            if (props.winningNumber !== -1) { 
+                const blinkTimeout = 500; // ms
+                const loopTimes = 2; // how many times to loop over the same colors array
+                let id = -1;
+
+                // find winning number segment id in the wheel
+                for (let seg = 0; seg < currentWheel.wheel.segments.length; seg++) {
+                    if (currentWheel.wheel.segments[seg] &&
+                        currentWheel.wheel.segments[seg].text === props.winningNumber) { // for some reason the segment is sometimes null
+                        id = seg;
+                        break;
+                    }
+                }
+
+                // id should always be present but just in case it's not,
+                // don't show an animation
+                if (id) {
+                    const originalColor = currentWheel.wheel.segments[id].fillStyle;
+
+                    // make the winning number block blink with different colors
+                    // for `loopTimes` number of loops
+                    for (let loop = 0; loop < loopTimes; loop++) {
+                        const timeoutUntilNextLoop = loop * winAnimationColors.length * blinkTimeout;
+
+                        winAnimationColors.forEach((color, i) => {
+                            const timeoutID = setTimeout(() => {
+                                currentWheel.wheel.segments[id].fillStyle = color;
+                                currentWheel.wheel.draw();
+                            }, blinkTimeout * i + timeoutUntilNextLoop);
+
+                            animationTimeouts.timeouts.push(timeoutID);
+                        });
+                    }
+
+                    // reset the original block color
+                    const timeoutID = setTimeout(() => {
+                        currentWheel.wheel.segments[id].fillStyle = originalColor;
+                        currentWheel.wheel.draw();
+                    }, blinkTimeout * winAnimationColors.length * loopTimes);
+
+                    animationTimeouts.timeouts.push(timeoutID);
+                }
             }
         });
 

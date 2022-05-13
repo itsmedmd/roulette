@@ -32,8 +32,7 @@
     }
 
     &__number--winning {
-        transition: background-color 1s;
-        animation: winning-number 5s ease-in-out;
+        animation: winning-number 5s;
     }
 
     &__zeroes-container {
