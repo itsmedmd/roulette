@@ -6,6 +6,10 @@
                     v-for="(zero, zeroID) in zeroes.numbers"
                     :key="`board-zero-${zeroID}`"
                     class="number-block block-green board__number board__zero"
+                    :class="{
+                        'board__number--winning':
+                        zero.number === $props.winningNumber
+                    }"
                 >
                     <span class="board__zero-text">{{ zero.number }}</span>
                 </button>
