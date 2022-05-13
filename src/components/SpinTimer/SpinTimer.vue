@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, watch, ref } from '@vue/runtime-core';
+import { onMounted, onUnmounted, watch, ref } from "vue";
+
 export default {
     name: "SpinTimer",
     props: [
@@ -25,6 +26,7 @@ export default {
         const secondsToRealSpin = ref(props.secondsTillSpin);
         let decrementInterval = null;
 
+        // decrement by 1 second
         const startDecrement = () => {
             decrementInterval = setInterval(() => {
                 secondsToFakeSpin.value--;
@@ -44,7 +46,7 @@ export default {
             secondsToFakeSpin.value = props.secondsTillFakeSpin;
             secondsToRealSpin.value = props.secondsTillSpin;
 
-            // restart interval
+            // restart the interval with new times when a new game is observed
             clearInterval(decrementInterval);
             startDecrement();
         });
@@ -64,4 +66,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/spin-timer.scss"></style>
+<style lang="scss" scoped src="./spin-timer.scss"></style>

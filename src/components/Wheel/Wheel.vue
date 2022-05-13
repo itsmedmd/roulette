@@ -122,7 +122,7 @@ export default {
             if (props.winningNumber !== -1) { 
                 const blinkTimeout = 500; // ms
                 const loopTimes = 2; // how many times to loop over the same colors array
-                let id = -1; // id of winning number segment in the wheel
+                let id = -1; // id of winning number segment(block) in the wheel
 
                 // find winning number segment id in the wheel
                 for (let seg = 0; seg < currentWheel.wheel.segments.length; seg++) {
@@ -136,7 +136,7 @@ export default {
                 // id should always be present but just in case it's not,
                 // don't show the animation
                 if (id) {
-                    const originalColor = currentWheel.wheel.segments[id].fillStyle;
+                    const originalBackgroundColor = currentWheel.wheel.segments[id].fillStyle;
 
                     // make the winning number block blink with different colors
                     // for `loopTimes` number of loops, with `blinkTimeout` ms between colors
@@ -153,9 +153,9 @@ export default {
                         });
                     }
 
-                    // reset the original block color
+                    // reset the original block color at the end of the animation
                     const timeoutID = setTimeout(() => {
-                        currentWheel.wheel.segments[id].fillStyle = originalColor;
+                        currentWheel.wheel.segments[id].fillStyle = originalBackgroundColor;
                         currentWheel.wheel.draw();
                     }, blinkTimeout * winAnimationColors.length * loopTimes);
 
@@ -172,4 +172,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/wheel.scss"></style>
+<style lang="scss" scoped src="./wheel.scss"></style>

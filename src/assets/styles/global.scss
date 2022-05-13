@@ -1,12 +1,11 @@
-@import "./colors";
 @import "./shared";
 
-$font-default: "Poppins", Arial, sans-serif;
+$text-default: #353840;
 
 * {
 	box-sizing: border-box;
-	color: $text-default;
-	font-family: $font-default;
+	color: #353840;
+	font-family: "Poppins", Arial, sans-serif;
 	margin: 0;
 	padding: 0;
 }

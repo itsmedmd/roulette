@@ -36,8 +36,7 @@ export default {
         const reversedHistory = computed(() => {
             if (props.history) {
                 const tempHistory = props.history;
-                tempHistory.sort((a, b) => b.date - a.date);
-                return tempHistory;
+                return tempHistory.sort((a, b) => b.date - a.date);
             }
             return [];
         });
@@ -49,4 +48,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/spin-history.scss"></style>
+<style lang="scss" scoped src="./spin-history.scss"></style>

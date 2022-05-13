@@ -3,7 +3,12 @@
         <h2 class="statistics__title">
             Statistics of last 200 spins for wheel {{ $props.wheelID }}:
         </h2>
-        <table class="statistics__table">
+        <table
+            class="statistics__table"
+            tabindex="0"
+            role="region"
+            :aria-label="`Statistics of last 200 spins for wheel ${$props.wheelID}`"
+        >
             <thead>
                 <tr>
                     <td></td>
@@ -49,7 +54,7 @@
 <script>
 
 import { onMounted, watch, reactive } from "vue";
-import customFetch from "../assets/scripts/customFetch";
+import customFetch from "@/assets/scripts/customFetch";
 
 export default {
     name: "StatisticsBlock",
@@ -85,7 +90,7 @@ export default {
 
                     // refetch
                     if (url === props.url) {
-                        emit("log", `${new Date().toISOString()}: (timeout) GET .../stats?limit=200 in ${refetchTimeout}ms`);
+                        emit("log", `${new Date().toISOString()}: (timeout after error) GET .../stats?limit=200 in ${refetchTimeout}ms`);
                         setTimeout(() => getStatistics(url), refetchTimeout);
                     } else {
                         emit("log", `${new Date().toISOString()}: GET .../stats?limit=200 failed and wheel changed, stopping refetch`);
@@ -94,8 +99,8 @@ export default {
             });
         }
 
-        // `props.fetchTrigger` is manually triggered from App.vue
-        // in order to update statistics when the current game ends 
+        // `props.fetchTrigger` is triggered from App.vue
+        // in order to update statistics when a game ends 
         watch([() => props.url, () => props.fetchTrigger], () => {
             getStatistics(props.url);
         });
@@ -111,4 +116,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/statistics.scss"></style>
+<style lang="scss" scoped src="./statistics.scss"></style>

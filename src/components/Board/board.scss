@@ -1,7 +1,7 @@
-@import "../general/colors";
-@import "../general/animations";
-@import "../general/mixins";
-@import "../general/variables";
+@import "@/assets/styles/colors";
+@import "@/assets/styles/animations";
+@import "@/assets/styles/mixins";
+@import "@/assets/styles/variables";
 
 .board {
     &__table-container {
@@ -17,13 +17,14 @@
     }
 
     &__number {
+        border: 0;
+        border-radius: 5px;
+        cursor: pointer;
         display: inline-block;
-        width: 64px;
 		font-size: 40px;
         margin: 1px;
-        border-radius: 5px;
         user-select: none;
-        cursor: pointer;
+        width: 64px;
 
         &:hover {
             transform: scale(1.03);
