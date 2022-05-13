@@ -1,5 +1,4 @@
-# roulette
-Live version can be found [here]("https://roulette-pi.vercel.app")
+# Roulette - live version can be found [here](https://roulette-pi.vercel.app)
 
 ## Project setup
 ```
