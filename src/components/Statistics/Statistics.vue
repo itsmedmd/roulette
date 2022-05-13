@@ -85,7 +85,7 @@ export default {
 
                     // refetch
                     if (url === props.url) {
-                        emit("log", `${new Date().toISOString()}: (timeout) GET .../stats?limit=200 in ${refetchTimeout}ms`);
+                        emit("log", `${new Date().toISOString()}: (timeout after error) GET .../stats?limit=200 in ${refetchTimeout}ms`);
                         setTimeout(() => getStatistics(url), refetchTimeout);
                     } else {
                         emit("log", `${new Date().toISOString()}: GET .../stats?limit=200 failed and wheel changed, stopping refetch`);

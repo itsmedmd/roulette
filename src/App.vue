@@ -72,6 +72,7 @@ export default {
         ActionsLog
     },
     setup() {
+        const actionsLog = reactive({ log: [] });
         const refetchTimeout = 1000; // ms
 
         // default url values
@@ -97,8 +98,21 @@ export default {
             positionToId: []
         });
 
-        const actionsLog = reactive({
-            log: []
+        const handleFakeSpin = () => {
+            actionsLog.log.push(`${new Date().toISOString()}: starting fake spin`);
+            isSpinning.value = true;
+        };
+
+        const handleRealSpin = () => {
+            getGameResults(gameData.data.uuid, currentURL.value);
+        };
+
+        const addActionLogMessage = (message) => {
+            actionsLog.log.push(message);
+        };
+
+        onMounted(() => {
+            getWheelConfiguration(currentURL.value);
         });
 
         watch(() => inputURL.value, () => {
@@ -145,7 +159,7 @@ export default {
 
                     // refetch
                     if (url === currentURL.value) {
-                        actionsLog.log.push(`${new Date().toISOString()}: (timeout) GET .../configuration in ${refetchTimeout}ms`);
+                        actionsLog.log.push(`${new Date().toISOString()}: (timeout after error) GET .../configuration in ${refetchTimeout}ms`);
                         setTimeout(() => getWheelConfiguration(url), refetchTimeout);
                     } else {
                         actionsLog.log.push(`${new Date().toISOString()}: GET .../configuration failed and wheel changed, stopping refetch`);
@@ -179,7 +193,7 @@ export default {
 
                     // refetch
                     if (url === currentURL.value) {
-                        actionsLog.log.push(`${new Date().toISOString()}: (timeout) GET .../nextGame in ${refetchTimeout}ms`);
+                        actionsLog.log.push(`${new Date().toISOString()}: (timeout after error) GET .../nextGame in ${refetchTimeout}ms`);
                         setTimeout(() => getNextGame(url), refetchTimeout);
                     } else {
                         actionsLog.log.push(`${new Date().toISOString()}: GET .../nextGame failed and wheel changed, stopping refetch`);
@@ -225,7 +239,7 @@ export default {
 
                     // refetch
                     if (uuid === gameData.data.uuid) {
-                        actionsLog.log.push(`${new Date().toISOString()}: (timeout) GET .../game/${uuid} in ${refetchTimeout}ms`);
+                        actionsLog.log.push(`${new Date().toISOString()}: (timeout after error) GET .../game/${uuid} in ${refetchTimeout}ms`);
                         setTimeout(() => getGameResults(uuid, url), refetchTimeout);
                     } else {
                         actionsLog.log.push(`${new Date().toISOString()}: GET .../game/${uuid} failed and game uuid changed, stopping refetch`);
@@ -233,23 +247,6 @@ export default {
                 }
             });
         };
-
-        const handleFakeSpin = () => {
-            actionsLog.log.push(`${new Date().toISOString()}: starting fake spin`);
-            isSpinning.value = true;
-        };
-
-        const handleRealSpin = () => {
-            getGameResults(gameData.data.uuid, currentURL.value);
-        };
-
-        const addActionLogMessage = (message) => {
-            actionsLog.log.push(message);
-        };
-
-        onMounted(() => {
-            getWheelConfiguration(currentURL.value);
-        });
 
         return {
             inputURL,
