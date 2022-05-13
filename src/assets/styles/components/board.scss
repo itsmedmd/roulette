@@ -1,17 +1,9 @@
 @import "../general/colors";
 @import "../general/animations";
+@import "../general/mixins";
+@import "../general/variables";
 
 .board {
-    display: flex;
-    align-items: center;
-    background-color: $table-color;
-    border: 2px solid rgba($black, 0.2);
-    margin-bottom: 64px;
-    height: 250px;
-    font-size: 40px;
-    padding: 8px;
-    border-radius: 10px;
-
     &__table-container {
         display: inline-flex;
         padding: 4px;
@@ -27,6 +19,7 @@
     &__number {
         display: inline-block;
         width: 64px;
+		font-size: 40px;
         margin: 1px;
         border-radius: 5px;
         user-select: none;
@@ -42,8 +35,9 @@
     }
 
     &__number--winning {
-        transition: background-color 1s;
-        animation: winning-number 5s ease-in-out;
+        // step-end in order to have no transition to achieve blinking effect
+        animation: winning-number 2.5s step-end;
+        animation-iteration-count: 2;
     }
 
     &__zeroes-container {
@@ -61,5 +55,57 @@
         align-items: center;
         color: $white;
         height: 100%;
+    }
+
+    @include respond-to(max-width, $break-board-medium) {
+        &__table {
+            grid-template-rows: repeat(3, 53px);
+        }
+    
+        &__number {
+            width: 53px;
+		    font-size: 30px;
+        }
+    }
+
+    @include respond-to(max-width, $break-tablet-small) {
+        &__table {
+            grid-template-rows: repeat(3, 40px);
+        }
+    
+        &__number {
+            width: 40px;
+		    font-size: 20px;
+        }
+    }
+
+    @include respond-to(max-width, $break-board-vertical) {
+        &__table-container {
+            flex-direction: column;
+        }
+
+        &__table {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        &__table-row {
+            display: flex;
+            flex-direction: column;
+        }
+
+        &__zeroes-container {
+            flex-direction: row;
+            margin-right: 0;
+        }
+
+        &__zero {
+            flex-grow: 1;
+        }
+    
+        &__number {
+            width: 64px;
+		    font-size: 40px;
+        }
     }
 }

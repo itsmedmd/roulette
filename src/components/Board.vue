@@ -1,7 +1,5 @@
 <template>
     <div class="board">
-        <Wheel/>
-
         <div class="board__table-container">
             <div class="board__zeroes-container">
                 <div
@@ -41,7 +39,6 @@
 
 <script>
 import { onMounted, reactive, watch } from "vue";
-import Wheel from "./Wheel.vue";
 
 export default {
     name: "RouletteBoard",
@@ -50,9 +47,6 @@ export default {
         "wheelID",
         "winningNumber"
     ],
-    components: {
-        Wheel
-    },
     setup(props, {emit}) {
         const board = reactive({ numbers: [] }); // without zeroes
         const zeroes = reactive({ numbers: [] }); // only zeroes

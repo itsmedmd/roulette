@@ -5,37 +5,46 @@
 
         <ActionsLog :log="actionsLog.log" />
 
-        <div class="app__stats-row" v-if="gameData.data">
-            <SpinTimer
-                :wheelID="gameData.data.wheelID"
-                :secondsTillSpin="gameData.data.startDelta"
-                :secondsTillFakeSpin="gameData.data.fakeStartDelta"
-                :newGameTrigger="newGameTrigger"
-                @fakeSpin="handleFakeSpin"
-                @gameStarted="handleGameStart"
-            />
-            <SpinHistory
-                :wheelID="gameData.data.wheelID"
-                :configuration="configuration"
-                :history="pastResults.numbers[gameData.data.wheelID]"
-            />
-        </div>
+        <main v-if="gameData.data">
+            <div class="app__stats-row">
+                <SpinTimer
+                    :wheelID="gameData.data.wheelID"
+                    :secondsTillSpin="gameData.data.startDelta"
+                    :secondsTillFakeSpin="gameData.data.fakeStartDelta"
+                    :newGameTrigger="newGameTrigger"
+                    @fakeSpin="handleFakeSpin"
+                    @gameStarted="handleRealSpin"
+                />
+                <SpinHistory
+                    :wheelID="gameData.data.wheelID"
+                    :configuration="configuration"
+                    :history="pastResults.numbers[gameData.data.wheelID]"
+                />
+            </div>
 
-        <Board
-            v-if="gameData.data"
-            :configuration="configuration"
-            :wheelID="gameData.data.wheelID"
-            :winningNumber="winningNumber"
-            @log="addActionLogMessage"
-        />
-        <Statistics
-            v-if="gameData.data"
-            :wheelID="gameData.data.wheelID"
-            :url="currentURL"
-            :configuration="configuration"
-            :fetchTrigger="statsTrigger"
-            @log="addActionLogMessage"
-        />
+            <div class="app__game-board">
+                <Wheel
+                    :configuration="configuration"
+                    :wheelID="gameData.data.wheelID"
+                    :winningNumber="winningNumber"
+                    :isSpinning="isSpinning"
+                />
+                <Board
+                    :configuration="configuration"
+                    :wheelID="gameData.data.wheelID"
+                    :winningNumber="winningNumber"
+                    @log="addActionLogMessage"
+                />
+            </div>
+
+            <Statistics
+                :wheelID="gameData.data.wheelID"
+                :url="currentURL"
+                :configuration="configuration"
+                :fetchTrigger="statsTrigger"
+                @log="addActionLogMessage"
+            />
+        </main>
     </div>
 </template>
 
@@ -46,6 +55,7 @@ import URLInputField from "./components/URLInputField.vue";
 import Statistics from "./components/Statistics.vue";
 import SpinTimer from "./components/SpinTimer.vue";
 import SpinHistory from "./components/SpinHistory.vue";
+import Wheel from "./components/Wheel.vue";
 import Board from "./components/Board.vue";
 import ActionsLog from "./components/ActionsLog.vue";
 
@@ -58,6 +68,7 @@ export default {
         Statistics,
         SpinTimer,
         SpinHistory,
+        Wheel,
         Board,
         ActionsLog
     },
@@ -78,6 +89,7 @@ export default {
         const statsTrigger = ref(true);
         const newGameTrigger = ref(true);
         const winningNumber = ref(-1);
+        const isSpinning = ref(false);
 
         // configuration
         const configuration = reactive({
@@ -121,8 +133,9 @@ export default {
                         configuration.results = data.results;
                         configuration.positionToId = data.positionToId;
 
-                        // reset winning number
+                        // reset winning number and wheel
                         winningNumber.value = -1;
+                        isSpinning.value = false;
 
                         // get new game data for the new wheel
                         getNextGame(url);
@@ -185,10 +198,11 @@ export default {
                     if (!data.result && !data.outcome) {
                         throw new Error("No data found");
                     } else {
-                        actionsLog.log.push(`${new Date().toISOString()}: game outcome is ${data.outcome}`);
+                        actionsLog.log.push(`${new Date().toISOString()}: game outcome is ${data.outcome}, stopping wheel`);
 
-                        // set winning number information
+                        // set winning number information and stop the wheel
                         winningNumber.value = data.outcome;
+                        isSpinning.value = false;
 
                         // create an array indexed by wheel id, so that only
                         // history relevant to the current wheel is displayed
@@ -223,9 +237,10 @@ export default {
 
         const handleFakeSpin = () => {
             actionsLog.log.push(`${new Date().toISOString()}: starting fake spin`);
+            isSpinning.value = true;
         };
 
-        const handleGameStart = () => {
+        const handleRealSpin = () => {
             getGameResults(gameData.data.uuid, currentURL.value);
         };
 
@@ -243,8 +258,9 @@ export default {
             configuration,
             gameData,
             winningNumber,
-            handleGameStart,
+            handleRealSpin,
             handleFakeSpin,
+            isSpinning,
             pastResults,
             statsTrigger,
             newGameTrigger,
