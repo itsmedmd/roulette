@@ -19,10 +19,13 @@ import { ref, onUpdated } from "vue";
 
 export default {
     name: "ActionsLog",
-    props: [ "log" ],
+    props: [
+        "log"
+    ],
     setup() {
         const list = ref(null);
 
+        // walways keep the list scrolled to the bottom
         onUpdated(() => {
             if (list.value) {
                 list.value.scrollTop = list.value.scrollHeight;

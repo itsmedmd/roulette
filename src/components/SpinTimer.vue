@@ -25,6 +25,7 @@ export default {
         const secondsToRealSpin = ref(props.secondsTillSpin);
         let decrementInterval = null;
 
+        // decrement by 1 second
         const startDecrement = () => {
             decrementInterval = setInterval(() => {
                 secondsToFakeSpin.value--;
@@ -44,7 +45,7 @@ export default {
             secondsToFakeSpin.value = props.secondsTillFakeSpin;
             secondsToRealSpin.value = props.secondsTillSpin;
 
-            // restart interval
+            // restart the interval with new times when a new game is observed
             clearInterval(decrementInterval);
             startDecrement();
         });

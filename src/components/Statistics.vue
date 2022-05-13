@@ -94,8 +94,8 @@ export default {
             });
         }
 
-        // `props.fetchTrigger` is manually triggered from App.vue
-        // in order to update statistics when the current game ends 
+        // `props.fetchTrigger` is triggered from App.vue
+        // in order to update statistics when a game ends 
         watch([() => props.url, () => props.fetchTrigger], () => {
             getStatistics(props.url);
         });
