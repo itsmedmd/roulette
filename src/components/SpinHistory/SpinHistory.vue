@@ -48,4 +48,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/spin-history.scss"></style>
+<style lang="scss" scoped src="./spin-history.scss"></style>

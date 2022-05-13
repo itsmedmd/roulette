@@ -49,7 +49,7 @@
 <script>
 
 import { onMounted, watch, reactive } from "vue";
-import customFetch from "../assets/scripts/customFetch";
+import customFetch from "@/assets/scripts/customFetch";
 
 export default {
     name: "StatisticsBlock",
@@ -111,4 +111,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/statistics.scss"></style>
+<style lang="scss" scoped src="./statistics.scss"></style>

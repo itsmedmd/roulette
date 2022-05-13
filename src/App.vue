@@ -50,16 +50,15 @@
 
 <script>
 import { ref, reactive, watch, onMounted } from "vue";
-
-import URLInputField from "./components/URLInputField.vue";
-import Statistics from "./components/Statistics.vue";
-import SpinTimer from "./components/SpinTimer.vue";
-import SpinHistory from "./components/SpinHistory.vue";
-import Wheel from "./components/Wheel.vue";
-import Board from "./components/Board.vue";
-import ActionsLog from "./components/ActionsLog.vue";
-
 import customFetch from "./assets/scripts/customFetch";
+
+import URLInputField from "./components/URLInputField";
+import Statistics from "./components/Statistics";
+import SpinTimer from "./components/SpinTimer";
+import SpinHistory from "./components/SpinHistory";
+import Wheel from "./components/Wheel";
+import Board from "./components/Board";
+import ActionsLog from "./components/ActionsLog";
 
 export default {
     name: "App",
@@ -271,4 +270,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/app.scss"></style>
+<style lang="scss" scoped src="@/assets/styles/app.scss"></style>

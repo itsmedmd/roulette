@@ -39,4 +39,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/actions-log.scss"></style>
+<style lang="scss" scoped src="./actions-log.scss"></style>

@@ -103,4 +103,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/board.scss"></style>
+<style lang="scss" scoped src="./board.scss"></style>

@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, watch, ref } from '@vue/runtime-core';
+import { onMounted, onUnmounted, watch, ref } from "vue";
+
 export default {
     name: "SpinTimer",
     props: [
@@ -65,4 +66,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/spin-timer.scss"></style>
+<style lang="scss" scoped src="./spin-timer.scss"></style>

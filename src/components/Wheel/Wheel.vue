@@ -172,4 +172,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/wheel.scss"></style>
+<style lang="scss" scoped src="./wheel.scss"></style>

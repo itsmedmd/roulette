@@ -1,7 +1,7 @@
-@import "../general/colors";
-@import "../general/animations";
-@import "../general/mixins";
-@import "../general/variables";
+@import "@/assets/styles/colors";
+@import "@/assets/styles/animations";
+@import "@/assets/styles/mixins";
+@import "@/assets/styles/variables";
 
 .board {
     &__table-container {

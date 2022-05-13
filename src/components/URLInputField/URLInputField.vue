@@ -30,4 +30,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped src="@/assets/styles/components/url-input-field.scss"></style>
+<style lang="scss" scoped src="./url-input-field.scss"></style>
