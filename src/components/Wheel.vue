@@ -37,8 +37,8 @@ export default {
         const winAnimationColors = [
             "deeppink",
             "chartreuse",
-            "turquoise",
-            "yellow",
+            "lightskyblue",
+            "gold",
             "navy"
         ];
 
@@ -60,7 +60,7 @@ export default {
         const drawWheel = () => {
             const elementsCount = props.configuration.results.length;
 
-            // create array of objects that contain block(number box) color and text
+            // create array of objects that contain wheel segment color and text
             const segments = props.configuration.positionToId.map((pos) => {
                 return {
                     fillStyle: colors[props.configuration.colors[pos]],
@@ -73,16 +73,15 @@ export default {
             currentWheel.wheel = new Winwheel({
                 'canvasId'        : 'wheelCanvas',
                 'responsive'      : true,
-                'textFillStyle'   : 'white',
+                'textFillStyle'   : 'white', // text color
                 'outerRadius'     : 200, // outer circle (with numbers)
                 'innerRadius'     : 95, // inner circle (empty)
                 'textFontSize'    : 17,
                 'textOrientation' : 'curved',
-                'textAlignment'   : 'outer',
+                'textAlignment'   : 'outer', // on the outer edge of the wheel
                 'numSegments'     : elementsCount,
                 'segments'        : segments,
-                'animation'       :
-                {
+                'animation'       : {
                     'type'     : 'spinOngoing', // linear
                     // in 1 second (duration) spin 1 time (spins):
                     'duration' : 1,
@@ -104,7 +103,7 @@ export default {
             });
             animationTimeouts.timeouts = [];
 
-            // draw new wheel
+            // re-draw the wheel to remove any color changes left over from before
             drawWheel();
         });
 
@@ -124,24 +123,24 @@ export default {
             if (props.winningNumber !== -1) { 
                 const blinkTimeout = 500; // ms
                 const loopTimes = 2; // how many times to loop over the same colors array
-                let id = -1;
+                let id = -1; // id of winning number segment in the wheel
 
                 // find winning number segment id in the wheel
                 for (let seg = 0; seg < currentWheel.wheel.segments.length; seg++) {
-                    if (currentWheel.wheel.segments[seg] &&
-                        currentWheel.wheel.segments[seg].text === props.winningNumber) { // for some reason the segment is sometimes null
+                    if (currentWheel.wheel.segments[seg] && // for some reason the segment is sometimes null
+                        currentWheel.wheel.segments[seg].text === props.winningNumber) {
                         id = seg;
                         break;
                     }
                 }
 
                 // id should always be present but just in case it's not,
-                // don't show an animation
+                // don't show the animation
                 if (id) {
                     const originalColor = currentWheel.wheel.segments[id].fillStyle;
 
                     // make the winning number block blink with different colors
-                    // for `loopTimes` number of loops
+                    // for `loopTimes` number of loops, with `blinkTimeout` ms between colors
                     for (let loop = 0; loop < loopTimes; loop++) {
                         const timeoutUntilNextLoop = loop * winAnimationColors.length * blinkTimeout;
 
