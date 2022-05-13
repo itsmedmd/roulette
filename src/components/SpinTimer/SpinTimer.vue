@@ -46,6 +46,18 @@ export default {
             secondsToFakeSpin.value = props.secondsTillFakeSpin;
             secondsToRealSpin.value = props.secondsTillSpin;
 
+            // if the user observes a new wheel while it should be fake spinning,
+            // immediately start fake spin
+            if (secondsToFakeSpin.value <= 0) {
+                emit("fakeSpin");
+            }
+
+            // if the user navigates to a new wheel at the moment when
+            // it should be starting a new game, immediately start the game
+            if (secondsToRealSpin.value <= 0) {
+                emit("gameStarted");
+            }
+
             // restart the interval with new times when a new game is observed
             clearInterval(decrementInterval);
             startDecrement();
