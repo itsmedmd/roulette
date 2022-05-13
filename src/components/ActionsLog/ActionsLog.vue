@@ -1,7 +1,14 @@
 <template>
     <div class="actions-log">
         <h3 class="actions-log__title">Actions log</h3>
-        <ul ref="list" class="actions-log__list" v-if="$props.log.length">
+        <ul
+            ref="list"
+            class="actions-log__list"
+            v-if="$props.log.length"
+            tabindex="0"
+            role="region"
+            aria-label="Actions log"
+        >
             <li
                 v-for="(action, id) in $props.log"
                 :key="`${action}-${id}`"

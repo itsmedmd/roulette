@@ -2,13 +2,13 @@
     <div class="board">
         <div class="board__table-container">
             <div class="board__zeroes-container">
-                <div
+                <button
                     v-for="(zero, zeroID) in zeroes.numbers"
                     :key="`board-zero-${zeroID}`"
                     class="number-block block-green board__number board__zero"
                 >
                     <span class="board__zero-text">{{ zero.number }}</span>
-                </div>
+                </button>
             </div>
 
             <div class="board__table">
@@ -17,7 +17,7 @@
                     :key="`board-row-${rowNum}`"
                     class="board__table-row"
                 >
-                    <div
+                    <button
                         v-for="i in board.numbers.length / 3"
                         :key="`board-num-${i * rowNum}`"
                         class="number-block board__number"
@@ -30,7 +30,7 @@
                         ]"
                     >
                         {{ board.numbers[rowNum + ((i - 1) * 3) - 1].number }}
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>

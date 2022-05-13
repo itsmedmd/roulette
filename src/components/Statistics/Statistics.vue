@@ -3,7 +3,12 @@
         <h2 class="statistics__title">
             Statistics of last 200 spins for wheel {{ $props.wheelID }}:
         </h2>
-        <table class="statistics__table">
+        <table
+            class="statistics__table"
+            tabindex="0"
+            role="region"
+            :aria-label="`Statistics of last 200 spins for wheel ${$props.wheelID}`"
+        >
             <thead>
                 <tr>
                     <td></td>
