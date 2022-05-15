@@ -28,6 +28,7 @@
                     :wheelID="gameData.data.wheelID"
                     :winningNumber="winningNumber"
                     :isSpinning="isSpinning"
+                    @log="addActionLogMessage"
                 />
                 <Board
                     :configuration="configuration"
@@ -39,7 +40,7 @@
 
             <Statistics
                 :wheelID="gameData.data.wheelID"
-                :url="currentURL"
+                :url="currentConfigURL"
                 :configuration="configuration"
                 :fetchTrigger="statsTrigger"
                 @log="addActionLogMessage"
@@ -78,9 +79,15 @@ export default {
         // default url values
         const baseURL = "https://dev-games-backend.advbet.com/v1/ab-roulette/";
         const baseID = 1;
-        const currentURL = ref(baseURL + baseID);
 
-        // input url is a separate variable for validation
+        // currently validated URL (user for getting new wheel configurations)
+        const currentURL = ref(baseURL + baseID); 
+
+        // currently active URL for which configuration was received
+        // (used for getting information only for currently active and valid game)
+        const currentConfigURL = ref(baseURL + baseID);
+
+        // url that is currently written in the input
         const inputURL = ref(baseURL + baseID);
 
         // current and previous game data
@@ -104,7 +111,7 @@ export default {
         };
 
         const handleRealSpin = () => {
-            getGameResults(gameData.data.uuid, currentURL.value);
+            getGameResults(gameData.data.uuid, currentConfigURL.value);
         };
 
         const addActionLogMessage = (message) => {
@@ -142,6 +149,8 @@ export default {
                     if (!data.colors && !data.results && !data.positionToId) {
                         throw new Error("No data found");
                     } else if (url === currentURL.value) {
+                        currentConfigURL.value = url;
+
                         configuration.colors = data.colors;
                         configuration.results = data.results;
                         configuration.positionToId = data.positionToId;
@@ -178,7 +187,7 @@ export default {
                 onSuccess: (data) => {
                     if (!data) {
                         throw new Error("No data found");
-                    } else if (url === currentURL.value) {
+                    } else if (url === currentConfigURL.value) {
                         actionsLog.log.push(`${new Date().toISOString()}: fake wheel spin will start in ${data.fakeStartDelta}s`);
                         gameData.data = data;
 
@@ -196,7 +205,7 @@ export default {
                     console.error("Next game fetch failed:", err);
 
                     // refetch
-                    if (url === currentURL.value) {
+                    if (url === currentConfigURL.value) {
                         actionsLog.log.push(`${new Date().toISOString()}: (timeout after error) GET .../nextGame in ${refetchTimeout}ms`);
                         setTimeout(() => getNextGame(url), refetchTimeout);
                     } else {
@@ -256,7 +265,7 @@ export default {
 
         return {
             inputURL,
-            currentURL,
+            currentConfigURL,
             configuration,
             gameData,
             winningNumber,

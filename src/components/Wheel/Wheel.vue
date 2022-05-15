@@ -21,7 +21,7 @@ export default {
         "winningNumber",
         "isSpinning"
     ],
-    setup(props) {
+    setup(props, {emit}) {
         const currentWheel = reactive({ wheel: null });
         const isSpinning = ref(false);
         const animationTimeouts = reactive({ timeouts: [] });
@@ -58,6 +58,7 @@ export default {
         };
 
         const drawWheel = () => {
+            emit("log", `${new Date().toISOString()}: creating wheel`);
             const elementsCount = props.configuration.results.length;
 
             // create array of objects that contain wheel segment color and text
