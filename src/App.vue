@@ -141,7 +141,7 @@ export default {
                 onSuccess: (data) => {
                     if (!data.colors && !data.results && !data.positionToId) {
                         throw new Error("No data found");
-                    } else {
+                    } else if (url === currentURL.value) {
                         configuration.colors = data.colors;
                         configuration.results = data.results;
                         configuration.positionToId = data.positionToId;
@@ -152,6 +152,8 @@ export default {
 
                         // get new game data for the new wheel
                         getNextGame(url);
+                    } else {
+                        actionsLog.log.push(`${new Date().toISOString()}: GET .../configuration success but wheel changed`);
                     }
                 },
                 onError: (err) => {
@@ -176,7 +178,7 @@ export default {
                 onSuccess: (data) => {
                     if (!data) {
                         throw new Error("No data found");
-                    } else {
+                    } else if (url === currentURL.value) {
                         actionsLog.log.push(`${new Date().toISOString()}: fake wheel spin will start in ${data.fakeStartDelta}s`);
                         gameData.data = data;
 
@@ -186,6 +188,8 @@ export default {
 
                         // trigger timer to reset
                         newGameTrigger.value = !newGameTrigger.value;
+                    } else {
+                        actionsLog.log.push(`${new Date().toISOString()}: GET .../nextGame success but wheel changed`);
                     }
                 },
                 onError: (err) => {
@@ -210,7 +214,7 @@ export default {
                 onSuccess: (data) => {
                     if (!data.result && !data.outcome) {
                         throw new Error("No data found");
-                    } else {
+                    } else if (uuid === gameData.data.uuid) {
                         actionsLog.log.push(`${new Date().toISOString()}: game outcome is ${data.outcome}, stopping wheel`);
 
                         // set winning number information and stop the wheel
@@ -232,6 +236,8 @@ export default {
                         // update statistics and get next game
                         statsTrigger.value = !statsTrigger.value;
                         getNextGame(url);
+                    } else {
+                        actionsLog.log.push(`${new Date().toISOString()}: GET .../game/${uuid} success but game uuid changed`);
                     }
                 },
                 onError: (err) => {

@@ -79,10 +79,12 @@ export default {
                 onSuccess: (data) => {
                     if (!data) {
                         throw new Error("No data found");
-                    } else {
+                    } else if (url === props.url) {
                         statistics.stats = data;
                         // sort stats by slot appearance count in descending order
                         statistics.stats.sort((a, b) => b.count - a.count);
+                    } else {
+                        emit("log", `${new Date().toISOString()}: GET .../stats?limit=200 success but wheel changed`);
                     }
                 },
                 onError: (err) => {
