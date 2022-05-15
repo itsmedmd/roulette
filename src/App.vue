@@ -28,6 +28,7 @@
                     :wheelID="gameData.data.wheelID"
                     :winningNumber="winningNumber"
                     :isSpinning="isSpinning"
+                    @log="addActionLogMessage"
                 />
                 <Board
                     :configuration="configuration"
@@ -39,7 +40,7 @@
 
             <Statistics
                 :wheelID="gameData.data.wheelID"
-                :url="currentURL"
+                :url="currentConfigURL"
                 :configuration="configuration"
                 :fetchTrigger="statsTrigger"
                 @log="addActionLogMessage"
@@ -78,9 +79,15 @@ export default {
         // default url values
         const baseURL = "https://dev-games-backend.advbet.com/v1/ab-roulette/";
         const baseID = 1;
-        const currentURL = ref(baseURL + baseID);
 
-        // input url is a separate variable for validation
+        // currently validated URL (user for getting new wheel configurations)
+        const currentURL = ref(baseURL + baseID); 
+
+        // currently active URL for which configuration was received
+        // (used for getting information only for currently active and valid game)
+        const currentConfigURL = ref(baseURL + baseID);
+
+        // url that is currently written in the input
         const inputURL = ref(baseURL + baseID);
 
         // current and previous game data
@@ -104,7 +111,7 @@ export default {
         };
 
         const handleRealSpin = () => {
-            getGameResults(gameData.data.uuid, currentURL.value);
+            getGameResults(gameData.data.uuid, currentConfigURL.value);
         };
 
         const addActionLogMessage = (message) => {
@@ -141,7 +148,9 @@ export default {
                 onSuccess: (data) => {
                     if (!data.colors && !data.results && !data.positionToId) {
                         throw new Error("No data found");
-                    } else {
+                    } else if (url === currentURL.value) {
+                        currentConfigURL.value = url;
+
                         configuration.colors = data.colors;
                         configuration.results = data.results;
                         configuration.positionToId = data.positionToId;
@@ -152,6 +161,8 @@ export default {
 
                         // get new game data for the new wheel
                         getNextGame(url);
+                    } else {
+                        actionsLog.log.push(`${new Date().toISOString()}: GET .../configuration success but wheel changed`);
                     }
                 },
                 onError: (err) => {
@@ -176,7 +187,7 @@ export default {
                 onSuccess: (data) => {
                     if (!data) {
                         throw new Error("No data found");
-                    } else {
+                    } else if (url === currentConfigURL.value) {
                         actionsLog.log.push(`${new Date().toISOString()}: fake wheel spin will start in ${data.fakeStartDelta}s`);
                         gameData.data = data;
 
@@ -186,13 +197,15 @@ export default {
 
                         // trigger timer to reset
                         newGameTrigger.value = !newGameTrigger.value;
+                    } else {
+                        actionsLog.log.push(`${new Date().toISOString()}: GET .../nextGame success but wheel changed`);
                     }
                 },
                 onError: (err) => {
                     console.error("Next game fetch failed:", err);
 
                     // refetch
-                    if (url === currentURL.value) {
+                    if (url === currentConfigURL.value) {
                         actionsLog.log.push(`${new Date().toISOString()}: (timeout after error) GET .../nextGame in ${refetchTimeout}ms`);
                         setTimeout(() => getNextGame(url), refetchTimeout);
                     } else {
@@ -210,7 +223,7 @@ export default {
                 onSuccess: (data) => {
                     if (!data.result && !data.outcome) {
                         throw new Error("No data found");
-                    } else {
+                    } else if (uuid === gameData.data.uuid) {
                         actionsLog.log.push(`${new Date().toISOString()}: game outcome is ${data.outcome}, stopping wheel`);
 
                         // set winning number information and stop the wheel
@@ -232,6 +245,8 @@ export default {
                         // update statistics and get next game
                         statsTrigger.value = !statsTrigger.value;
                         getNextGame(url);
+                    } else {
+                        actionsLog.log.push(`${new Date().toISOString()}: GET .../game/${uuid} success but game uuid changed`);
                     }
                 },
                 onError: (err) => {
@@ -250,7 +265,7 @@ export default {
 
         return {
             inputURL,
-            currentURL,
+            currentConfigURL,
             configuration,
             gameData,
             winningNumber,
